@@ -65,21 +65,21 @@ class Wechat extends Controller
       $data='{
        "button":[
        {
-            "type":"click",
-            "name":"邦哥最强",
-            "key":"V1001_TODAY_MUSIC"
+            "type":"view",
+            "name":"天气",
+            "url":"http://140.143.186.215/wx/weather.html"
         },
         {
-             "name":"头号邦吹",
+             "name":"菜单",
              "sub_button":[
              {
                  "type":"view",
-                 "name":"邦哥最帅",
+                 "name":"搜索",
                  "url":"http://www.soso.com/"
               },
               {
                  "type":"click",
-                 "name":"邦哥牛逼",
+                 "name":"赞一下我们",
                  "key":"V1001_GOOD"
               }]
          }]
