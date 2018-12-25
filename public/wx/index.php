@@ -50,12 +50,21 @@ else{
         if( strtolower( $postObj->MsgType) == 'text'){
              //接受文本信息
     		$content = $postObj->Content;
-          if($content=='北京天气'){
+          if(strpos($content,'天气') !== false){
+            $city=str_replace("天气","",$content);
+            $url="http://140.143.186.215/city/".$city;
+    		$result=postcurl($url);	
+      		if($result["code"]==200){
+          		$city_code=$result["citycode"];
+              	$url="http://140.143.186.215/weather/".$city_code;
+    			$result=postcurl($url);
+              	$weather=$result["weather"];
+        	}
              	$toUser   = $postObj->FromUserName;
                 $fromUser = $postObj->ToUserName;
                 $time     = time();
                 $msgType  =  'text';
-                $content  = '北京今天天气晴朗，最高气温11°C，最低气温0°C';
+                $content  = $city.'今天天气'.$weather;
                 $template = "<xml>
                                 <ToUserName><![CDATA[%s]]></ToUserName>
                                 <FromUserName><![CDATA[%s]]></FromUserName>
@@ -84,4 +93,18 @@ else{
                 echo $info;
           }
         }
+}
+function postcurl($url,$data = null){
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        if (!empty($data)){
+            curl_setopt($ch, CURLOPT_POST, TRUE);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        }
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        return 	$output=json_decode($output,true);
     }
